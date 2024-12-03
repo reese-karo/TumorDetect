@@ -4,6 +4,10 @@ Our Vignette explains the concepts behind Convolution Neural Networks (CNN) and 
 
 - WIP: include an image of the CNN process. Image -> conv layer with x filters of 3x3 kernel, then max pool, then more layers to capture info, then flatten to be passed into a deep neural network that can be passed into a final output layer with the softmax activation, so that we can get probabilities for each class. then the output with the highest probability is the predicted class.
 
+## Contributors
+
+Reese Karo, Daniel Ledvin, Casey Linden, Navin Lo, Will Mahnke
+
 ## Repository content
 
  - `data` contains multiple folders of raw data and our processed data used for CNNs:
