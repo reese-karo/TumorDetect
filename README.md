@@ -1,6 +1,8 @@
 # vignette-cnn
 
-This project uses convolution neural networks (CNNs) for image-classificiation and prediction
+Our Vignette explains the concepts behind Convolution Neural Networks (CNN) and how we can utilize the computing power to predict image classification. Convolution neural nets are more advanced than regular neural nets or perceptrons, because they have the ability to capture more information from the picture due to the convolution process. Many filters are applied to capture things like edges, sharp contrasts, and more features that are in images. After applying many 
+
+- WIP: include an image of the CNN process. Image -> conv layer with x filters of 3x3 kernel, then max pool, then more layers to capture info, then flatten to be passed into a deep neural network that can be passed into a final output layer with the softmax activation, so that we can get probabilities for each class. then the output with the highest probability is the predicted class.
 
 ## Repository content
 
@@ -25,3 +27,6 @@ This project uses convolution neural networks (CNNs) for image-classificiation a
 - `vignette.ipynb` contains the final python notebook for the vignette
 
 - `vignette.html` contains the html render for `vignette.ipynb`
+
+## Reference List
+- 
