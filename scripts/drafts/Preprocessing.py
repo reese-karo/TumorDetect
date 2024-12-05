@@ -14,10 +14,11 @@ def preprocess_data(path: str, n_samples: int, seed: int):
         tuple: (data_processed (np.ndarray), labels (list[str]))
     '''
     all_files = os.listdir(path)  # create a list of all files in the path
-    print(f"Total files in {path}: {len(all_files)}")  # Debug: print total number of files
+    image_files = [f for f in all_files if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+    print(f"Total files in {path}: {len(image_files)}")  # Debug: print total number of files
 
     np.random.seed(seed=seed)  # reproducibility
-    selected_files = np.random.choice(all_files, min(n_samples, len(all_files)), replace=False)  # randomly select n_samples files
+    selected_files = np.random.choice(image_files, min(n_samples, len(image_files)), replace=False)  # randomly select n_samples files
     print(f"Selected files: {len(selected_files)}")  # Debug: print number of selected files
 
     data = []
