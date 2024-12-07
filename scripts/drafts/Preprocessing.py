@@ -29,7 +29,7 @@ def preprocess_data(path: str, n_samples: int, seed: int):
             if img is None:
                 print(f"Warning: {file} could not be read and will be skipped.")  # Debug: warn if image is None
                 continue
-            img = cv2.resize(img, (64, 64))  # resize image
+            img = cv2.resize(img, (128, 128))  # resize image
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # convert to grayscale
             data.append(img)
             labels.append(os.path.basename(path).split('_')[0])  # Use folder name for labels
@@ -38,7 +38,7 @@ def preprocess_data(path: str, n_samples: int, seed: int):
     
     # Convert to numpy array and normalize pixel values to [0, 1]
     data = np.array(data) / 255.0
-    data = data.reshape(len(data), 64, 64, 1)  # Reshape for CNNs
+    data = data.reshape(len(data), 128, 128, 1)  # Reshape for CNNs
     
     print(f"Processed {len(data)} images.")  # Debug: print number of processed images
     return data, labels
