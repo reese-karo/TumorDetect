@@ -24,9 +24,11 @@ Reese Karo, Daniel Ledvin, Casey Linden, Navin Lo, Will Mahnke
 
 - `scripts` contains some starter py scripts
 
-    - `preprocessing.py` contains a function to pull images from a subdirectory in `data` and process the photos into a numpy array
+    - `drafts` contains files used in the data preprocessing and our initial CNNs
 
-    - WIP: add description for other py files that get added tp scripts
+        - `Modeling.ipynb` contains our initial, simple CNN architecture as well as a function that uses hyperparameter tuning to optimize the CNN architecture
+
+        - `preprocessing.py` contains a function to pull images from a subdirectory in `data` and process the photos into a numpy array 
 
 - `vignette.ipynb` contains the final python notebook for the vignette
 
