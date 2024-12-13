@@ -40,6 +40,8 @@ Our Vignette explains the concepts behind Convolution Neural Networks (CNN) and 
 - `vignette.html` contains the html render for `vignette.ipynb`
 
 ## Reference List
+- CNN in Computer Vision
+    - https://medium.com/@AIandInsights/convolutional-neural-networks-cnns-in-computer-vision-10573d0f5b00
 - Hyperparameter Tuning:
     - https://medium.com/swlh/hyperparameter-tuning-in-keras-tensorflow-2-with-keras-tuner-randomsearch-hyperband-3e212647778f
 - Tumor CNN Classification
