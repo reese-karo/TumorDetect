@@ -128,8 +128,8 @@ window.Quarto = {
 </header>
 
 
-<p align="center">
-<img src="img/BrainTumor_intro_photo.jpg" alt="Brain MRI">
+<p align="center" style="margin: 0 auto;">
+<img src="img/BrainTumor_intro_photo.jpg" alt="Brain MRI" style="display: block; margin: 0 auto;">
 </p>
 <p>CNNs are a class of deep neural networks commonly used for analyzing visual imagery. They are particularly effective for image classification and recognition tasks due to their ability to capture spatial hierarchies in images.</p>
 <section id="key-components" class="level3">
@@ -167,7 +167,7 @@ window.Quarto = {
 <section id="packages-and-imports" class="level3">
 <h3 class="anchored" data-anchor-id="packages-and-imports">Packages and Imports</h3>
 <p>We will use packages that help with preprocessing the data and splitting the data into training, testing, and validation sets. Additionally, we will also import <code>os</code> to make sure we are in the correct working directory and the <code>preprocess_data</code> function from our <code>Preprocessing.py</code> script. The code below loads all the necessary components for preprocessing and sets a seed to ensure reproducibility of the models. This helps minimize the impact of random variance, allowing us to attribute results to the model’s performance rather than random chance..</p>
-<div id="cell-2" class="cell" data-execution_count="1">
+<div id="cell-2" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scripts.drafts.Preprocessing <span class="im">import</span> preprocess_data</span>
@@ -184,7 +184,7 @@ window.Quarto = {
 <section id="preprocessing" class="level2">
 <h2 class="anchored" data-anchor-id="preprocessing">Preprocessing</h2>
 <p>First we have to find the path to our current working directory and add the paths of the raw image data files (jpg’s) so that we can access them when we do our preprocessing.</p>
-<div id="cell-4" class="cell" data-execution_count="5">
+<div id="cell-4" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save pathway to working directory</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>my_dir <span class="op">=</span> os.getcwd()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current working directory: </span><span class="sc">{</span><span class="bu">str</span><span class="sc">.</span>split(my_dir, <span class="st">'/'</span>)[<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -208,7 +208,7 @@ window.Quarto = {
 <li>Normalization of pixel values from [0,255] to [0,1] for numerical stability during training</li>
 <li>Label extraction of the image based on the folder name (<code>glioma_tumor</code>, <code>meningioma_tumor</code>, <code>pituitary_tumor</code>, <code>no_tumor</code>)</li>
 </ul>
-<div id="cell-6" class="cell" data-execution_count="11">
+<div id="cell-6" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>glioma_data, glioma_labels <span class="op">=</span> preprocess_data(glioma_path, <span class="dv">224</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>meningioma_data, meningioma_labels <span class="op">=</span> preprocess_data(meningioma_path, <span class="dv">224</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pituitary_data, pituitary_labels <span class="op">=</span> preprocess_data(pituitary_path, <span class="dv">224</span>)</span>
@@ -225,7 +225,7 @@ Processed 438 images.</code></pre>
 </div>
 </div>
 <p>Next we can combine all of our images and their labels into separate arrays. From here we partition our data into training and testing sets. We also created a validation set so that we can test our model accuracy as it is training. The labels must also be one hot encoded so that our model is able to process what category each image falls into. Note, running this chunk can require more time.</p>
-<div id="cell-8" class="cell" data-execution_count="21">
+<div id="cell-8" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># combine images and labels into their respective dataframes</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"stacking data"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.vstack([glioma_data, meningioma_data, pituitary_data, normal_data])</span>
@@ -318,7 +318,7 @@ Test set shape: (620, 224, 224, 3)
 <section id="import-packages" class="level3">
 <h3 class="anchored" data-anchor-id="import-packages">Import packages</h3>
 <p>Before we begin modeling, we must import <code>keras</code> so that we can build our neural networks. We also import a few functions from <code>keras</code> so that we can more easily call them later on.</p>
-<div id="cell-14" class="cell" data-execution_count="7">
+<div id="cell-14" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras_tuner <span class="im">as</span> kt</span>
@@ -326,41 +326,40 @@ Test set shape: (620, 224, 224, 3)
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.optimizers <span class="im">import</span> Adam</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.layers <span class="im">import</span> Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, Flatten, Dense, Dropout, BatchNormalization</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.callbacks <span class="im">import</span> EarlyStopping, ModelCheckpoint, ReduceLROnPlateau</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> backend <span class="im">as</span> K</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras.metrics <span class="im">import</span> Precision, Recall, AUC</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage.feature <span class="im">import</span> graycomatrix, graycoprops</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>tf.random.set_seed(<span class="dv">12345</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>keras.utils.set_random_seed(<span class="dv">12345</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix, classification_report</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>tf.random.set_seed(<span class="dv">12345</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>keras.utils.set_random_seed(<span class="dv">12345</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="building-our-models" class="level2">
 <h2 class="anchored" data-anchor-id="building-our-models">Building Our Models</h2>
-<p>We start by creating a simple convolutional layered model as a base model to set a baseline to see how well a simple CNN trains on the data set without modifications. This will help us</p>
+<p>In this section, we will create a simple convolutional layered model as a baseline to evaluate how well a CNN can train on our dataset.</p>
 <section id="what-is-a-cnn" class="level3">
 <h3 class="anchored" data-anchor-id="what-is-a-cnn">What is a CNN?</h3>
-<p>A CNN (convolutional neural network) is a type of network that specializes in processing and predicting image data and more generally, grid-like data. This makes it especially useful for image classification. It utilizes detection of spatial hierarchies and patterns with layers of convolutional filters. Unlike the classic feed-forward network, which connects each neuron to every neuron in the next layer, a CNN uses local receptive fields and shared weights in its convolutional layers, which reduces the number of parameters significantly, and improves the efficiency of the model.</p>
+<p>A CNN (Convolutional Neural Network) specializes in processing image data. It detects spatial hierarchies and patterns through layers of convolutional filters, significantly reducing the number of parameters compared to traditional feed-forward networks.</p>
 </section>
-</section>
-<section id="simple-cnn-model-flow" class="level2">
-<h2 class="anchored" data-anchor-id="simple-cnn-model-flow">Simple CNN Model Flow</h2>
+<section id="simple-cnn-model-flow" class="level3">
+<h3 class="anchored" data-anchor-id="simple-cnn-model-flow">Simple CNN Model Flow</h3>
 <ul>
-<li>In our example, the filters will pickup on different shapes, edges, and other patterns in the image, by sliding multiple 3x3 kernels convolving with the input image.</li>
-<li>After this we, apply a pooling function of either, averaging or maximizing, which halves the size of our convolved feature, keeping the most prominent features.</li>
-<li>Then after another layer of convolution coupled with maxpooling for dimensionality reduction, we flatten the output and pass to a <strong>Dense layer</strong> of x hidden layers.
-<ul>
-<li>We will leave this as <strong>x</strong> for now, and explain how we can optimally find the best value to minimize the loss. Mathematically we can write this as: <span class="math display">\[
-  \min_{\theta} \left[
-  \frac{1}{n} \sum_{i=1}^{n} \text{Loss}(f_{\theta}(x_i), y_i) +
-  \lambda \cdot \text{Regularization}(\theta)\right]
-  \]</span></li>
-</ul></li>
-<li>Finally the output layer is activated by a softmax function to provide us with probabilities of the classes.</li>
+<li><strong>Convolutional Layers</strong>: Filters slide over the input image to detect shapes and edges.</li>
+<li><strong>Pooling Layers</strong>: Max or average pooling reduces the dimensionality of the feature maps, keeping the most prominent features.</li>
+<li><strong>Flattening</strong>: The output is flattened to feed into dense layers.</li>
+<li><strong>Dense Layers</strong>: These layers combine features to predict the final output.</li>
 </ul>
-<p>Here we show one of the 3 main ways to create a neural network using the keras API, which includes utilizing the class method. Here, we define and initialize the layers we will include and define a function, call which passes the inputs to each layer</p>
-<div id="cell-16" class="cell" data-execution_count="22">
+<section id="mathematical-optimization" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-optimization">Mathematical Optimization</h4>
+<p>To optimize the number of units in our dense layers, we aim to minimize the loss function: <span class="math display">\[
+\min_{\theta} \left[
+\frac{1}{n} \sum_{i=1}^{n} \text{Loss}(f_{\theta}(x_i), y_i) +
+\lambda \cdot \text{Regularization}(\theta)\right]
+\]</span> This ensures that we neither underfit nor overfit the model.</p>
+</section>
+</section>
+<section id="code-implementation-with-keras-api" class="level3">
+<h3 class="anchored" data-anchor-id="code-implementation-with-keras-api">Code Implementation with Keras API</h3>
+<div id="cell-16" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># build a simple CNN model for baseline</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>inputs <span class="op">=</span> Input(shape<span class="op">=</span>(<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">3</span>), name<span class="op">=</span><span class="st">'input_layer'</span>) <span class="co"># initialize the input layer</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> Conv2D(<span class="dv">32</span>, kernel_size<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>), activation<span class="op">=</span><span class="st">'relu'</span>, name<span class="op">=</span><span class="st">'conv1'</span>)(inputs) <span class="co"># pass the input to the first convolution layer</span></span>
@@ -416,6 +415,7 @@ Test set shape: (620, 224, 224, 3)
 </pre>
 </div>
 </div>
+</section>
 <section id="loss-function-choice" class="level3">
 <h3 class="anchored" data-anchor-id="loss-function-choice">Loss Function Choice:</h3>
 <p>Since we have already encoded our labels using the <code>OneHotEncoder</code> from scikit-learn, we select <code>categorical_crossentropy</code> as our loss function. If the labels were not encoded, we would need to use <code>sparse_categorical_crossentropy</code> instead.</p>
@@ -429,7 +429,7 @@ Test set shape: (620, 224, 224, 3)
 <li>Validation is included so we can monitor how it performs on unseen data Here we can resize back to 128 for quicker training times, but may lose out on performance.</li>
 <li>We then can use the <strong>.fit()</strong> function to train the neural network using the data provided above.</li>
 </ul>
-<div id="cell-19" class="cell" data-execution_count="23">
+<div id="cell-18" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># resize data</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>train_data_resized <span class="op">=</span> np.zeros((train_data.shape[<span class="dv">0</span>], <span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">3</span>))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
@@ -444,43 +444,68 @@ Test set shape: (620, 224, 224, 3)
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, image <span class="kw">in</span> <span class="bu">enumerate</span>(test_data):</span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    test_data_resized[i] <span class="op">=</span> cv2.resize(image, (<span class="dv">128</span>, <span class="dv">128</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-20" class="cell">
+<div id="cell-19" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Early stopping will stop training when the validation loss stops improving for a few epochs, preventing overfitting</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>early_stopping <span class="op">=</span> EarlyStopping(monitor<span class="op">=</span><span class="st">'val_accuracy'</span>, </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                               patience<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="dv">1</span>, </span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                               restore_best_weights<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># train the model with .fit(). uncoment to run, but we have saved the model in the previous cell</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> simple_model.fit(</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    train_data_resized,</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    train_labels,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    validation_data<span class="op">=</span>(val_data_resized, val_labels), <span class="co"># Convert sparse matrix</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="dv">32</span>, <span class="co"># mini batch size</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    callbacks<span class="op">=</span>[early_stopping]</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#history = simple_model.fit(</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    train_data_resized,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    train_labels,</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#    validation_data=(val_data_resized, val_labels), # Convert sparse matrix</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    epochs=20,</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    batch_size=32, # mini batch size</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#    callbacks=[early_stopping]</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#)</span></span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># save model</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>simple_model.save(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/simple_model.keras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#simple_model.save(my_dir + "/scripts/drafts/models/simple_model.keras")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-21" class="cell" data-execution_count="26">
+<div id="cell-20" class="cell" data-execution_count="53">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>simple_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/simple_model.keras"</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model on test set</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>test_loss, test_accuracy, test_auc <span class="op">=</span> simple_model.evaluate(test_data_resized, test_labels)</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># classification report</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> simple_model.predict(test_data_resized)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> ohe.inverse_transform(test_labels)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> ohe.inverse_transform(y_pred)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(test_labels_classes, y_pred_classes))</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(test_labels_classes, y_pred_classes).T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 1s 31ms/step - AUC: 0.9219 - accuracy: 0.7918 - loss: 1.1216
-Test Loss: 1.0375816822052002
-Test Accuracy: 0.7870967984199524
-Test AUC: 0.9256560802459717</code></pre>
+<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 1s 31ms/step - AUC: 0.9303 - accuracy: 0.7859 - loss: 1.0649
+Test Loss: 0.9708671569824219
+Test Accuracy: 0.7887097001075745
+Test AUC: 0.9317619800567627
+20/20 ━━━━━━━━━━━━━━━━━━━━ 1s 29ms/step
+              precision    recall  f1-score   support
+
+      glioma       0.72      0.84      0.78       180
+  meningioma       0.82      0.68      0.74       183
+          no       0.78      0.83      0.80        88
+   pituitary       0.86      0.83      0.84       169
+
+    accuracy                           0.79       620
+   macro avg       0.79      0.79      0.79       620
+weighted avg       0.79      0.79      0.79       620
+
+[[152  35   8  16]
+ [ 11 124   5  12]
+ [  8  12  73   1]
+ [  9  12   2 140]]</code></pre>
 </div>
 </div>
-<p>The output from training the CNN shows how the accuracy and loss on the training and validation sets change over time. Additionally, when testing our model on the testing set we achieved an accuracy of about 70% percent. While this model had a simple architecture and only ran for 15 epochs, more complex models run over more epochs will create code outputs that are hard to read. Thus it’s better to graph the accuracy and loss values and see how they change as the CNN trains.</p>
+<p>The output from training the simple CNN shows how the accuracy and loss on the training and validation sets change over time. Additionally, when testing our model on the testing set we achieved an accuracy of about 70% percent. While this model had a simple architecture and only ran for 15 epochs, more complex models run over more epochs will create code outputs that are hard to read. Thus it’s better to graph the accuracy and loss values and see how they change as the CNN trains.</p>
 <section id="plotting-accuracy-and-loss" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-accuracy-and-loss">Plotting accuracy and loss</h2>
 <p>We can then use our model to plot how accuracy and loss change over time in the training and validation sets</p>
-<div id="cell-25" class="cell" data-execution_count="27">
+<div id="cell-22" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(history.history[<span class="st">'accuracy'</span>], label<span class="op">=</span><span class="st">'Train Accuracy'</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(history.history[<span class="st">'val_accuracy'</span>], label<span class="op">=</span><span class="st">'Validation Accuracy'</span>)</span>
@@ -503,14 +528,11 @@ Test AUC: 0.9256560802459717</code></pre>
 </div>
 </div>
 </div>
-<p>Overall the model quickly improves it’s accuracy and loss on the training set, which is expected. However, the plots show that the accuracy of the model faulters a little on the validation set with its best accuracy at epoch six. In addition to the test accuracy of 80%, the waivering accuracy on the validation set suggest this simple CNN architecture isn’t a good choice for correctly predicting these photos (after all, you wouldn’t want a doctor that can only correctly identify cancer 80% of the time). Thus we continue but experimenting with other CNN architectures and using hyperband tuning to optimize our model and achieve a higher test accuracy.</p>
+<p>Overall, the model quickly improves its accuracy and loss on the training set, which is expected. However, the plots show that the accuracy of the model falters on the validation set, with its best accuracy at epoch six. In addition to the test accuracy of 80%, the wavering accuracy on the validation set suggests that this simple CNN architecture isn’t a good choice for correctly predicting these photos (after all, you wouldn’t want a doctor that can only correctly identify cancer 80% of the time). Thus, we continue by experimenting with other CNN architectures and using Hyperband tuning to optimize our model and achieve a higher test accuracy.</p>
 </section>
 <section id="hyperparameter-tuning" class="level2">
-<h2 class="anchored" data-anchor-id="hyperparameter-tuning">HyperParameter Tuning</h2>
-<ul>
-<li><p>We will apply Hyperband Parameter Tuning to find the best set of hyperparameters for our model. This process is crucial as it can significantly enhance model performance by optimizing the learning process.</p></li>
-<li><p>The model will be instantiated in the build model function, where we will add multiple convolutional layers with a wide range of hyperparameter values.</p></li>
-</ul>
+<h2 class="anchored" data-anchor-id="hyperparameter-tuning">Hyperparameter Tuning</h2>
+<p>We will apply Hyperband Parameter Tuning to find the best set of hyperparameters for our model. This process is crucial as it can significantly enhance model performance by optimizing the learning process.</p>
 <section id="list-of-hyperparameters-to-tune" class="level3">
 <h3 class="anchored" data-anchor-id="list-of-hyperparameters-to-tune">List of Hyperparameters to Tune:</h3>
 <ul>
@@ -520,7 +542,7 @@ Test AUC: 0.9256560802459717</code></pre>
 <li><strong>Dropout Rate</strong>: The fraction of neurons to drop during training to prevent overfitting (e.g., 0.3, 0.5).</li>
 <li><strong>Batch Sizes</strong>: The number of samples processed before the model is updated. Larger batch sizes can reduce computation time but may lead to lower accuracy due to less diverse data (e.g., 16, 32, 64).</li>
 </ul>
-<div id="cell-28" class="cell" data-execution_count="6">
+<div id="cell-24" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># building a hyperband model to find the best model architecture</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model(hp):</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''function to build a CNN model with a tuner object'''</span></span>
@@ -555,7 +577,7 @@ Test AUC: 0.9256560802459717</code></pre>
 <span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-29" class="cell">
+<div id="cell-25" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hp_tuning(build_model: <span class="bu">callable</span>, train_data: np.ndarray, train_labels: np.ndarray, </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>              val_data: np.ndarray, val_labels: np.ndarray, callbacks: <span class="bu">list</span>[keras.callbacks.Callback], </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              directory: <span class="bu">str</span>):</span>
@@ -597,38 +619,49 @@ Test AUC: 0.9256560802459717</code></pre>
 <span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_hp, best_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Once we have our best model/hyperparameters, we can then build using the best architecture and load the weights that were saved from the model checkpoint callback.</p>
-<div id="cell-31" class="cell" data-execution_count="28">
+<p>Once we have our best model/hyperparameters trained, we can make use of the ModelCheckpoint call back, and store the model for later use rather than re-training on the best hyper-parameters</p>
+<div id="cell-27" class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading the best model from the modeling_file already saved:</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>best_hp_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/best_hyperband_model.keras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-32" class="cell" data-execution_count="29">
+<div id="cell-28" class="cell" data-execution_count="54">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate the best model on the test set</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Hyperband_test_loss, Hyperband_test_accuracy, Hyperband_test_auc <span class="op">=</span> best_hp_model.evaluate(test_data_resized, test_labels)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>Hyperband_test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>Hyperband_test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>Hyperband_test_auc<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> best_hp_model.predict(test_data_resized)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> np.argmax(y_pred, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert test_labels from one-hot encoding to single class format</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> np.argmax(test_labels, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(test_labels_classes, y_pred_classes))</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>y_pred_Hyperband <span class="op">=</span> best_hp_model.predict(test_data_resized)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> ohe.inverse_transform(test_labels)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>y_pred_Hyperband_classes <span class="op">=</span> ohe.inverse_transform(y_pred_Hyperband)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(test_labels_classes, y_pred_Hyperband_classes))</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(test_labels_classes, y_pred_Hyperband_classes).T)</span>
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># save model if first time running</span></span>
 <span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Hyperband_model.save(my_dir[:-15] + "/scripts/models/Hyperband_model.keras")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 2s 91ms/step - AUC: 0.9502 - accuracy: 0.8156 - loss: 0.5667
+<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 2s 81ms/step - AUC: 0.9502 - accuracy: 0.8156 - loss: 0.5667
 Test Loss: 0.5280869603157043
 Test Accuracy: 0.8209677338600159
 Test AUC: 0.9545157551765442
-20/20 ━━━━━━━━━━━━━━━━━━━━ 2s 88ms/step
-[[150  18   6   6]
- [ 19 136  14  14]
- [  3  10  73   2]
- [  4  13   2 150]]</code></pre>
+20/20 ━━━━━━━━━━━━━━━━━━━━ 2s 89ms/step
+              precision    recall  f1-score   support
+
+      glioma       0.85      0.83      0.84       180
+  meningioma       0.77      0.74      0.76       183
+          no       0.77      0.83      0.80        88
+   pituitary       0.87      0.89      0.88       169
+
+    accuracy                           0.82       620
+   macro avg       0.82      0.82      0.82       620
+weighted avg       0.82      0.82      0.82       620
+
+[[150  19   3   4]
+ [ 18 136  10  13]
+ [  6  14  73   2]
+ [  6  14   2 150]]</code></pre>
 </div>
 </div>
 </section>
@@ -637,9 +670,9 @@ Test AUC: 0.9545157551765442
 <section id="simple-cnn-model" class="level4">
 <h4 class="anchored" data-anchor-id="simple-cnn-model">Simple CNN Model</h4>
 <ul>
-<li><strong>Test Loss</strong>: 1.0376</li>
-<li><strong>Test Accuracy</strong>: 78.71%</li>
-<li><strong>Test AUC</strong>: 0.926</li>
+<li><strong>Test Loss</strong>: .971</li>
+<li><strong>Test Accuracy</strong>: 78.87%</li>
+<li><strong>Test AUC</strong>: 0.931</li>
 </ul>
 </section>
 <section id="hyperband-tuned-model" class="level4">
@@ -654,39 +687,35 @@ Test AUC: 0.9545157551765442
 <h4 class="anchored" data-anchor-id="performance-improvements">Performance Improvements</h4>
 <ul>
 <li><strong>Loss Reduction</strong>: ~50%</li>
-<li><strong>Accuracy Increase</strong>: ~5%</li>
-<li><strong>AUC Improvement</strong>: 0.03 points</li>
+<li><strong>Accuracy Increase</strong>: ~4%</li>
+<li><strong>AUC Improvement</strong>: 0.02 points</li>
 </ul>
-<p>The Hyperband tuning significantly enhanced the model’s performance, demonstrating the effectiveness of optimizing hyperparameters. These results demonstrate to us that the Hyperband-tuned model is not only more reliable but better equipped to handle the complex patterns in the dataset, when compared to a simple CNN. This performance boost is especially critical in applications where accurate classification has significant consequences, such as medical diagnostics.</p>
+<p>The Hyperband tuning enhanced the model’s performance, demonstrating the effectiveness of optimizing hyperparameters. These results demonstrate to us that the Hyperband-tuned model is not only more reliable but better equipped to handle the complex patterns in the dataset, when compared to a simple CNN. This performance boost is especially critical in applications where accurate classification has significant consequences, such as medical diagnostics. The performance mostly lies in the loss decreasing my nearly half.</p>
+<p>We will now see how much better a model can perform from the transfer learned model.</p>
 </section>
 </section>
 </section>
 </section>
 <section id="transfer-learning-with-resnet50v2" class="level1">
 <h1>Transfer Learning with ResNet50V2</h1>
-<ul>
-<li>We can enhance the model by using transfer learning which uses a pre-trained models weights and architecture to help predict on our data.</li>
-<li>We will customize our model by playing around with the pre-trained layers by freezing and unfreezing.</li>
-</ul>
 <section id="strategy" class="level3">
 <h3 class="anchored" data-anchor-id="strategy"><strong>Strategy</strong></h3>
 <p>One strategy used below includes freezing all layers except the last, which helps maintain the integrity of the pre-trained model while allowing us to train the last layer on our specific dataset.</p>
 <p>First, we will need to load in the pre-trained model using <code>keras.applications.ResNet50V2</code> for ResNet50. We want to make sure the input image is 224 x 224 pixels, as the ResNet50V2 model was trained on this image size, and performance will decrease</p>
-<div id="cell-35" class="cell" data-execution_count="30">
+<div id="cell-31" class="cell" data-execution_count="46">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show layer names of the pre-trained model</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use ResNet50V2 from keras.application as pre trained model with imagenet weight</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># we dont include the top layer as we will be building our own dense layers. Top layer is the output layer.</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.applications.ResNet50V2(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> keras.applications.ResNet50V2(</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    weights<span class="op">=</span><span class="st">'imagenet'</span>, classes<span class="op">=</span><span class="dv">4</span>, input_shape<span class="op">=</span>(<span class="dv">224</span>, <span class="dv">224</span>, <span class="dv">3</span>), include_top<span class="op">=</span><span class="va">False</span></span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="building-a-new-model-from-transfer-learning" class="level2">
-<h2 class="anchored" data-anchor-id="building-a-new-model-from-transfer-learning">Building a new model from transfer learning</h2>
-<ul>
-<li>In this step we will define a new model in a build model function which starts by taking in the argument, <code>pre_trained_model</code>. Here we can use any pre-trained model that works best. From there we will</li>
-</ul>
-<div id="cell-37" class="cell" data-execution_count="41">
+<section id="building-a-new-model-for-transfer-learning" class="level2">
+<h2 class="anchored" data-anchor-id="building-a-new-model-for-transfer-learning">Building a New Model for Transfer Learning</h2>
+<p>In this step, we will define a new model in a build model function that starts by taking in the argument, <code>pre_trained_model</code>. We can use any pre-trained model that works best, which has been trained on a larger dataset and utilizes more computational resources (GPUs, more memory, etc.). This approach provides generalized features that are well-suited for a variety of tasks.</p>
+<p>To adapt this model to our specific dataset, we will unfreeze the last layer in the pre-trained model, allowing us to train it on our custom dataset. We will also add dense layers to learn specific patterns in the tumor data, incorporate dropout layers for regularization, and include a softmax output for classification. This combination maximizes the benefits of transfer learning while tailoring the model to our unique classification task.</p>
+<div id="cell-33" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model(pre_trained_model):</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Builds a model with a pre-trained model of the users choice,</span></span>
@@ -711,40 +740,36 @@ Test AUC: 0.9545157551765442
 <span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                  metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
 <span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-38" class="cell" data-execution_count="58">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the pre-trained ResNet50V2 model</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># training on a image size of 224x224 is most optimal for ResNet50V2</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> keras.applications.ResNet50V2(include_top<span class="op">=</span><span class="va">False</span>, input_shape<span class="op">=</span>(<span class="dv">224</span>, <span class="dv">224</span>, <span class="dv">3</span>), weights<span class="op">=</span><span class="st">'imagenet'</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Freeze layers of the pre-trained model</span></span>
+<div id="cell-34" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Freeze layers of the pre-trained model</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Unfreeze the last few layers for fine-tuning</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>set_trainable <span class="op">=</span> <span class="va">False</span></span>
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Unfreeze the last few layers for fine-tuning</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>set_trainable <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> layer.name <span class="op">==</span> <span class="st">'conv5_block3_preact_bn'</span>:  <span class="co"># Start unfreezing from this layer onward</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        set_trainable <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> set_trainable</span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(layer, BatchNormalization):  <span class="co"># Keep BatchNormalization layers frozen</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        layer.trainable <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Build and train the initial model</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#pre_trained_model = build_model(base_model)</span></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#early_stopping = EarlyStopping(monitor='val_accuracy', patience=8, restore_best_weights=True)</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=1e-6, verbose=1)</span></span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#callbacks = [early_stopping, reduce_lr]</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Train frozen base model</span></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#history = pre_trained_model.fit(train_data, train_labels, </span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#                    epochs=50,</span></span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#                    validation_data=(val_data, val_labels),  </span></span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#                    batch_size=32,</span></span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co">#                    callbacks=callbacks)</span></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co"># load model</span></span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/transfer_learned_model.keras"</span>)</span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>pre_trained_model.<span class="bu">compile</span>(optimizer<span class="op">=</span>Adam(), loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>pre_trained_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> layer.name <span class="op">==</span> <span class="st">'conv5_block3_preact_bn'</span>:  <span class="co"># Start unfreezing from this layer onward</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        set_trainable <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> set_trainable</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(layer, BatchNormalization):  <span class="co"># Keep BatchNormalization layers frozen</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        layer.trainable <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Build and train the initial model</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#pre_trained_model = build_model(base_model)</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">#early_stopping = EarlyStopping(monitor='val_accuracy', patience=8, restore_best_weights=True)</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=1e-6, verbose=1)</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#callbacks = [early_stopping, reduce_lr]</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Train frozen base model</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#history = pre_trained_model.fit(train_data, train_labels, </span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#                    epochs=50,</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co">#                    validation_data=(val_data, val_labels),  </span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#                    batch_size=32,</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#                    callbacks=callbacks)</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co"># load model</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/transfer_learned_model.keras"</span>)</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>pre_trained_model.<span class="bu">compile</span>(optimizer<span class="op">=</span>Adam(), loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>pre_trained_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential"</span>
 </pre>
@@ -792,14 +817,15 @@ Test AUC: 0.9545157551765442
 <h2 class="anchored" data-anchor-id="evaluate-model-performance">Evaluate Model Performance</h2>
 <section id="overall-performance" class="level3">
 <h3 class="anchored" data-anchor-id="overall-performance">Overall Performance</h3>
-<div id="cell-40" class="cell" data-execution_count="56">
+<p>When evaluating on the test set, we see a much higher test accuracy and test AUC value with the transfer learning model, with values of 0.929 and 0.974, respectively. Its use of leveraging pre-trained weights from a large-scale dataset like ImageNet allows the model to be much more fine-tuned than a model that only uses the layers we defined. The model is then able to adapt to the context of brain tumor images, resulting in a much higher accuracy and determination between classes.</p>
+<div id="cell-37" class="cell" data-execution_count="48">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate on test set</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_accuracy, test_auc <span class="op">=</span> pre_trained_model.evaluate(test_data, test_labels)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 15s 691ms/step - AUC: 0.9818 - accuracy: 0.9270 - loss: 0.4676
+<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 16s 712ms/step - AUC: 0.9818 - accuracy: 0.9270 - loss: 0.4676
 Test Loss: 0.5465376377105713
 Test Accuracy: 0.9290322661399841
 Test AUC: 0.9747616648674011</code></pre>
@@ -808,14 +834,17 @@ Test AUC: 0.9747616648674011</code></pre>
 </section>
 <section id="performance-for-each-class" class="level3">
 <h3 class="anchored" data-anchor-id="performance-for-each-class">Performance for Each Class</h3>
-<div id="cell-42" class="cell" data-execution_count="57">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> pre_trained_model.predict(test_data)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> ohe.inverse_transform(test_labels)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> ohe.inverse_transform(y_pred)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(test_labels_classes, y_pred_classes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>From viewing the classification report below, we can see that the model performs well performs well across all classes, especially the <code>no_tumor</code> class. The macro and weighted averages indicate that the model is well-balanced and not biased towards any specific class, which is crucial for multi-class classification tasks.</p>
+<div id="cell-40" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> pre_trained_model.predict(test_data)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> ohe.inverse_transform(test_labels)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> ohe.inverse_transform(y_pred)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(test_labels_classes, y_pred_classes))</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(test_labels_classes, y_pred_classes).T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 15s 724ms/step
+<pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 14s 688ms/step
               precision    recall  f1-score   support
 
       glioma       0.94      0.93      0.94       180
@@ -826,7 +855,11 @@ Test AUC: 0.9747616648674011</code></pre>
     accuracy                           0.93       620
    macro avg       0.93      0.94      0.93       620
 weighted avg       0.93      0.93      0.93       620
-</code></pre>
+
+[[167   6   1   3]
+ [ 10 166   0  10]
+ [  2   3  87   0]
+ [  1   8   0 156]]</code></pre>
 </div>
 </div>
 </section>
@@ -836,9 +869,11 @@ weighted avg       0.93      0.93      0.93       620
 <h1>Conclusion</h1>
 <section id="results" class="level2">
 <h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>After training three separate networks (simple CNN, tuned CNN, and transfer learned CNN), we found that the transfer-learning network performed best across all key metrics, including test accuracy, precision, recall, and F1-scores. The high accuracy of 93%, along with consistent precision and recall across all tumor classes, suggests that the transfer learning model not only learned robust features but also generalized effectively to unseen data. Notably, the model excelled in classifying brain images with no tumors, achieving near-perfect recognition, which is expected given the distinct characteristics of this class. These results underscore the potential of transfer learning models in medical imaging, where pre-trained networks can significantly enhance the accuracy and efficiency of tumor classification tasks.</p>
 </section>
-<section id="considerations" class="level2">
-<h2 class="anchored" data-anchor-id="considerations">Considerations</h2>
+<section id="considerations-for-future-work" class="level2">
+<h2 class="anchored" data-anchor-id="considerations-for-future-work">Considerations for Future Work</h2>
+<p>For future work, several considerations could enhance our model’s performance. One area is hardware limitations; we were forced to reduce pixel size to accommodate resource constraints, which may have impacted the model’s ability to capture finer details. Acquiring a more balanced dataset is crucial to ensure the model learns representative features for all classes. Additionally, applying techniques such as zooms, rotations, and other data augmentation strategies could effectively expand the dataset and improve robustness. Improved preprocessing, particularly by leveraging TensorFlow’s built-in preprocessing pipelines, could further standardize and enhance data quality, leading to better overall performance.</p>
 </section>
 </section>
 
