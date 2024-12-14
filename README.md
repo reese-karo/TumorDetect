@@ -2,8 +2,7 @@
 
 ## Vignette on implementing distribution-based clustering using cell type data; created as a class project for PSTAT197A in Fall 2023.
 
-- WIP: include an image of the CNN process. Image -> conv layer with x filters of 3x3 kernel, then max pool, then more layers to capture info, then flatten to be passed into a deep neural network that can be passed into a final output layer with the softmax activation, so that we can get probabilities for each class. then the output with the highest probability is the predicted class.
-
+![CNN Workflow](img/cnn-workflow.png)
 
 ## Contributors
 
