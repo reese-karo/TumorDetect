@@ -2,7 +2,9 @@
 
 ## Vignette on implementing distribution-based clustering using cell type data; created as a class project for PSTAT197A in Fall 2023.
 
-![CNN Workflow](img/cnn-workflow.png)
+<p align="center">
+  <img src="img/cnn-workflow.png" alt="CNN Workflow">
+</p>
 
 ## Contributors
 
