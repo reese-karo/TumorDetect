@@ -45,7 +45,8 @@ Our Vignette explains the concepts behind Convolution Neural Networks (CNN) and 
     - https://medium.com/@AIandInsights/convolutional-neural-networks-cnns-in-computer-vision-10573d0f5b00
 - Hyperparameter Tuning:
     - https://medium.com/swlh/hyperparameter-tuning-in-keras-tensorflow-2-with-keras-tuner-randomsearch-hyperband-3e212647778f
+    - https://keras.io/keras_tuner/
 - Tumor CNN Classification
-    -
+    - https://www.nature.com/articles/s41598-024-65714-w
 - Keras API for ML Classification
-    - 
+    - https://keras.io/api/applications/
