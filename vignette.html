@@ -128,6 +128,9 @@ window.Quarto = {
 </header>
 
 
+<p align="center">
+<img src="img/BrainTumor_intro_photo.jpg" alt="Brain MRI">
+</p>
 <p>CNNs are a class of deep neural networks commonly used for analyzing visual imagery. They are particularly effective for image classification and recognition tasks due to their ability to capture spatial hierarchies in images.</p>
 <section id="key-components" class="level3">
 <h3 class="anchored" data-anchor-id="key-components">Key Components:</h3>
@@ -159,7 +162,11 @@ window.Quarto = {
 <li>Uses an activation function like softmax for multi-class classification, providing probabilities for each class.</li>
 </ul></li>
 </ol>
-<p>CNNs have revolutionized the field of computer vision and are widely used in applications such as image and video recognition, medical image analysis, and autonomous vehicles. ### Packages and Imports We will use packages that help with preprocessing the data and splitting the data into training, testing, and validation sets. Additionally, we will also import <code>os</code> to make sure we are in the correct working directory and the <code>preprocess_data</code> function from our Preprocessing script. The code below loads everything needed for preprocessing and sets a seed for reproducability.</p>
+<p>CNNs have revolutionized the field of computer vision and are widely used in applications such as image and video recognition, medical image analysis, and autonomous vehicles. In the context of brain tumors, CNNs are especially valuable for analyzing medical imaging methodologies like MRI, CT Scans, and many others. Accurate networks can quickly detect and classify tumors, allowing for early detection and more effective treatment for better patient outcomes.</p>
+</section>
+<section id="packages-and-imports" class="level3">
+<h3 class="anchored" data-anchor-id="packages-and-imports">Packages and Imports</h3>
+<p>We will use packages that help with preprocessing the data and splitting the data into training, testing, and validation sets. Additionally, we will also import <code>os</code> to make sure we are in the correct working directory and the <code>preprocess_data</code> function from our <code>Preprocessing.py</code> script. The code below loads all the necessary components for preprocessing and sets a seed to ensure reproducibility of the models. This helps minimize the impact of random variance, allowing us to attribute results to the model’s performance rather than random chance..</p>
 <div id="cell-2" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
@@ -176,7 +183,7 @@ window.Quarto = {
 </section>
 <section id="preprocessing" class="level2">
 <h2 class="anchored" data-anchor-id="preprocessing">Preprocessing</h2>
-<p>First we have to find the pathway of our current working directory and add the pathways of the raw data files so that we can access them when we do our preprocessing.</p>
+<p>First we have to find the path to our current working directory and add the paths of the raw image data files (jpg’s) so that we can access them when we do our preprocessing.</p>
 <div id="cell-4" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save pathway to working directory</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>my_dir <span class="op">=</span> os.getcwd()</span>
@@ -192,6 +199,15 @@ window.Quarto = {
 </div>
 </div>
 <p>Next we preprocess the raw data in order to train our neural network model. Since there are thousands of images in the raw data, we decided to select a smaller sample to work with while we train our model.</p>
+<p>Our preprocessing includes:</p>
+<ul>
+<li>Reading .jpg image</li>
+<li>Resizing each image (224x224 in this case) for uniform input size to the model</li>
+<li>Color conversion (BGR to RGB)</li>
+<li>Grayscale handling: If an image is grayscale, it is converted to a 3-channel format by stacking the grayscale data across the three channels.</li>
+<li>Normalization of pixel values from [0,255] to [0,1] for numerical stability during training</li>
+<li>Label extraction of the image based on the folder name (<code>glioma_tumor</code>, <code>meningioma_tumor</code>, <code>pituitary_tumor</code>, <code>no_tumor</code>)</li>
+</ul>
 <div id="cell-6" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>glioma_data, glioma_labels <span class="op">=</span> preprocess_data(glioma_path, <span class="dv">224</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>meningioma_data, meningioma_labels <span class="op">=</span> preprocess_data(meningioma_path, <span class="dv">224</span>)</span>
@@ -296,9 +312,12 @@ Test set shape: (620, 224, 224, 3)
 </div>
 </div>
 </div>
+</section>
+<section id="modeling" class="level1">
+<h1>Modeling</h1>
 <section id="import-packages" class="level3">
 <h3 class="anchored" data-anchor-id="import-packages">Import packages</h3>
-<p>Before we begin modeling, we must import <code>keras</code> so that we can build our neural network. We also import a few functions from <code>keras</code> so that we can more easily call them later on.</p>
+<p>Before we begin modeling, we must import <code>keras</code> so that we can build our neural networks. We also import a few functions from <code>keras</code> so that we can more easily call them later on.</p>
 <div id="cell-14" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
@@ -317,13 +336,13 @@ Test set shape: (620, 224, 224, 3)
 <span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>keras.utils.set_random_seed(<span class="dv">12345</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="modeling" class="level1">
-<h1>Modeling</h1>
+<section id="building-our-models" class="level2">
+<h2 class="anchored" data-anchor-id="building-our-models">Building Our Models</h2>
 <p>We start by creating a simple convolutional layered model as a base model to set a baseline to see how well a simple CNN trains on the data set without modifications. This will help us</p>
 <section id="what-is-a-cnn" class="level3">
 <h3 class="anchored" data-anchor-id="what-is-a-cnn">What is a CNN?</h3>
 <p>A CNN (convolutional neural network) is a type of network that specializes in processing and predicting image data and more generally, grid-like data. This makes it especially useful for image classification. It utilizes detection of spatial hierarchies and patterns with layers of convolutional filters. Unlike the classic feed-forward network, which connects each neuron to every neuron in the next layer, a CNN uses local receptive fields and shared weights in its convolutional layers, which reduces the number of parameters significantly, and improves the efficiency of the model.</p>
+</section>
 </section>
 <section id="simple-cnn-model-flow" class="level2">
 <h2 class="anchored" data-anchor-id="simple-cnn-model-flow">Simple CNN Model Flow</h2>
@@ -541,7 +560,7 @@ Test AUC: 0.9256560802459717</code></pre>
 </div>
 </div>
 </div>
-<p>Overall the model quickly improves it’s accuracy and loss on the training set, which makes sense. However, the plots show that the accuracy of the model faulters a little on the validation set with its best accuracy at epoch six. In addition to the test accuracy of 80%, the waivering accuracy on the validation set suggest this simple CNN architecture isn’t a good choice for correctly predicting these photos (after all, you wouldn’t want a doctor that can only correctly identify cancer 80% of the time). Thus we continue but experimenting with other CNN architectures and using hyperband tuning to optimize our model and achieve a higher test accuracy.</p>
+<p>Overall the model quickly improves it’s accuracy and loss on the training set, which is expected. However, the plots show that the accuracy of the model faulters a little on the validation set with its best accuracy at epoch six. In addition to the test accuracy of 80%, the waivering accuracy on the validation set suggest this simple CNN architecture isn’t a good choice for correctly predicting these photos (after all, you wouldn’t want a doctor that can only correctly identify cancer 80% of the time). Thus we continue but experimenting with other CNN architectures and using hyperband tuning to optimize our model and achieve a higher test accuracy.</p>
 </section>
 <section id="hyperparameter-tuning" class="level2">
 <h2 class="anchored" data-anchor-id="hyperparameter-tuning">HyperParameter Tuning</h2>
@@ -695,7 +714,7 @@ Test AUC: 0.9545157551765442
 <li><strong>Accuracy Increase</strong>: ~5%</li>
 <li><strong>AUC Improvement</strong>: 0.03 points</li>
 </ul>
-<p>The Hyperband tuning significantly enhanced the model’s performance, demonstrating the effectiveness of optimizing hyperparameters.</p>
+<p>The Hyperband tuning significantly enhanced the model’s performance, demonstrating the effectiveness of optimizing hyperparameters. These results demonstrate to us that the Hyperband-tuned model is not only more reliable but better equipped to handle the complex patterns in the dataset, when compared to a simple CNN. This performance boost is especially critical in applications where accurate classification has significant consequences, such as medical diagnostics.</p>
 </section>
 </section>
 </section>
