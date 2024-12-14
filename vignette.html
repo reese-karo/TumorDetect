@@ -167,7 +167,7 @@ window.Quarto = {
 <section id="packages-and-imports" class="level3">
 <h3 class="anchored" data-anchor-id="packages-and-imports">Packages and Imports</h3>
 <p>We will use packages that help with preprocessing the data and splitting the data into training, testing, and validation sets. Additionally, we will also import <code>os</code> to make sure we are in the correct working directory and the <code>preprocess_data</code> function from our <code>Preprocessing.py</code> script. The code below loads all the necessary components for preprocessing and sets a seed to ensure reproducibility of the models. This helps minimize the impact of random variance, allowing us to attribute results to the model’s performance rather than random chance..</p>
-<div id="cell-2" class="cell" data-execution_count="12">
+<div id="cell-2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scripts.drafts.Preprocessing <span class="im">import</span> preprocess_data</span>
@@ -184,10 +184,10 @@ window.Quarto = {
 <section id="preprocessing" class="level2">
 <h2 class="anchored" data-anchor-id="preprocessing">Preprocessing</h2>
 <p>First we have to find the path to our current working directory and add the paths of the raw image data files (jpg’s) so that we can access them when we do our preprocessing.</p>
-<div id="cell-4" class="cell" data-execution_count="19">
+<div id="cell-4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save pathway to working directory</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>my_dir <span class="op">=</span> os.getcwd()</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current working directory: </span><span class="sc">{</span>my_dir<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Current working directory: </span><span class="sc">{</span><span class="bu">str</span><span class="sc">.</span>split(my_dir, <span class="st">'/'</span>)[<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Save pathways of raw data files</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>glioma_path <span class="op">=</span> my_dir <span class="op">+</span> <span class="st">"/data/glioma_tumor"</span></span>
@@ -195,7 +195,7 @@ window.Quarto = {
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>pituitary_path <span class="op">=</span> my_dir <span class="op">+</span> <span class="st">"/data/pituitary_tumor"</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>normal_path <span class="op">=</span> my_dir <span class="op">+</span> <span class="st">"/data/no_tumor"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Current working directory: /Users/reese/Documents/School/UC Santa Barbra/PSTAT/PSTAT197/vignette-cnn</code></pre>
+<pre><code>Current working directory: vignette-cnn</code></pre>
 </div>
 </div>
 <p>Next we preprocess the raw data in order to train our neural network model. Since there are thousands of images in the raw data, we decided to select a smaller sample to work with while we train our model.</p>
@@ -208,7 +208,7 @@ window.Quarto = {
 <li>Normalization of pixel values from [0,255] to [0,1] for numerical stability during training</li>
 <li>Label extraction of the image based on the folder name (<code>glioma_tumor</code>, <code>meningioma_tumor</code>, <code>pituitary_tumor</code>, <code>no_tumor</code>)</li>
 </ul>
-<div id="cell-6" class="cell" data-execution_count="20">
+<div id="cell-6" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>glioma_data, glioma_labels <span class="op">=</span> preprocess_data(glioma_path, <span class="dv">224</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>meningioma_data, meningioma_labels <span class="op">=</span> preprocess_data(meningioma_path, <span class="dv">224</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>pituitary_data, pituitary_labels <span class="op">=</span> preprocess_data(pituitary_path, <span class="dv">224</span>)</span>
@@ -318,7 +318,7 @@ Test set shape: (620, 224, 224, 3)
 <section id="import-packages" class="level3">
 <h3 class="anchored" data-anchor-id="import-packages">Import packages</h3>
 <p>Before we begin modeling, we must import <code>keras</code> so that we can build our neural networks. We also import a few functions from <code>keras</code> so that we can more easily call them later on.</p>
-<div id="cell-14" class="cell" data-execution_count="13">
+<div id="cell-14" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras_tuner <span class="im">as</span> kt</span>
@@ -444,88 +444,31 @@ Test set shape: (620, 224, 224, 3)
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, image <span class="kw">in</span> <span class="bu">enumerate</span>(test_data):</span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    test_data_resized[i] <span class="op">=</span> cv2.resize(image, (<span class="dv">128</span>, <span class="dv">128</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-20" class="cell" data-execution_count="24">
+<div id="cell-20" class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Early stopping will stop training when the validation loss stops improving for a few epochs, preventing overfitting</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>early_stopping <span class="op">=</span> EarlyStopping(monitor<span class="op">=</span><span class="st">'val_accuracy'</span>, </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                               patience<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="dv">1</span>, </span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                               restore_best_weights<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># train the model with .fit(). uncoment to run, but we have saved the model in the previous cell</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#history = simple_model.fit(</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    train_data_resized,</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    train_labels,</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#    validation_data=(val_data_resized, val_labels), # Convert sparse matrix</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#    epochs=20,</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    batch_size=32, # mini batch size</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#    callbacks=[early_stopping]</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 127ms/step - AUC: 0.6071 - accuracy: 0.3352 - loss: 1.7317 - val_AUC: 0.8158 - val_accuracy: 0.5622 - val_loss: 1.0429
-Epoch 2/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 122ms/step - AUC: 0.8589 - accuracy: 0.6023 - loss: 0.8965 - val_AUC: 0.8963 - val_accuracy: 0.7076 - val_loss: 0.7886
-Epoch 3/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 123ms/step - AUC: 0.9241 - accuracy: 0.7172 - loss: 0.6568 - val_AUC: 0.9152 - val_accuracy: 0.7431 - val_loss: 0.7161
-Epoch 4/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 122ms/step - AUC: 0.9628 - accuracy: 0.8234 - loss: 0.4635 - val_AUC: 0.9210 - val_accuracy: 0.7544 - val_loss: 0.6980
-Epoch 5/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 124ms/step - AUC: 0.9780 - accuracy: 0.8714 - loss: 0.3562 - val_AUC: 0.9270 - val_accuracy: 0.7593 - val_loss: 0.6864
-Epoch 6/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 123ms/step - AUC: 0.9905 - accuracy: 0.9176 - loss: 0.2396 - val_AUC: 0.9102 - val_accuracy: 0.7076 - val_loss: 0.8194
-Epoch 7/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 123ms/step - AUC: 0.9924 - accuracy: 0.9279 - loss: 0.2108 - val_AUC: 0.9310 - val_accuracy: 0.7932 - val_loss: 0.7152
-Epoch 8/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 133ms/step - AUC: 0.9971 - accuracy: 0.9522 - loss: 0.1355 - val_AUC: 0.9271 - val_accuracy: 0.7948 - val_loss: 0.8389
-Epoch 9/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 127ms/step - AUC: 0.9978 - accuracy: 0.9666 - loss: 0.1112 - val_AUC: 0.9294 - val_accuracy: 0.7787 - val_loss: 0.8472
-Epoch 10/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 140ms/step - AUC: 0.9982 - accuracy: 0.9640 - loss: 0.0992 - val_AUC: 0.9309 - val_accuracy: 0.8142 - val_loss: 0.9093
-Epoch 11/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 140ms/step - AUC: 0.9996 - accuracy: 0.9873 - loss: 0.0499 - val_AUC: 0.9296 - val_accuracy: 0.8158 - val_loss: 0.9709
-Epoch 12/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 10s 170ms/step - AUC: 0.9990 - accuracy: 0.9735 - loss: 0.0730 - val_AUC: 0.9262 - val_accuracy: 0.7787 - val_loss: 0.9228
-Epoch 13/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 141ms/step - AUC: 0.9993 - accuracy: 0.9845 - loss: 0.0599 - val_AUC: 0.9352 - val_accuracy: 0.8126 - val_loss: 0.8760
-Epoch 14/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 8s 128ms/step - AUC: 0.9995 - accuracy: 0.9826 - loss: 0.0596 - val_AUC: 0.9129 - val_accuracy: 0.7690 - val_loss: 1.1338
-Epoch 15/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 126ms/step - AUC: 0.9974 - accuracy: 0.9529 - loss: 0.1137 - val_AUC: 0.9153 - val_accuracy: 0.7787 - val_loss: 1.1652
-Epoch 16/20
-59/59 ━━━━━━━━━━━━━━━━━━━━ 7s 124ms/step - AUC: 0.9990 - accuracy: 0.9722 - loss: 0.0711 - val_AUC: 0.9297 - val_accuracy: 0.8110 - val_loss: 1.0114
-Epoch 16: early stopping
-Restoring model weights from the end of the best epoch: 11.
-20/20 ━━━━━━━━━━━━━━━━━━━━ 1s 29ms/step - AUC: 0.9219 - accuracy: 0.7918 - loss: 1.1216</code></pre>
-</div>
-<div class="cell-output cell-output-error">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ValueError</span>                                Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[24], line 16</span>
-<span class="ansi-green-fg ansi-bold">      6</span> history <span style="color:rgb(98,98,98)">=</span> simple_model<span style="color:rgb(98,98,98)">.</span>fit(
-<span class="ansi-green-fg ansi-bold">      7</span>     train_data_resized,
-<span class="ansi-green-fg ansi-bold">      8</span>     train_labels,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-fg ansi-bold">     12</span>     callbacks<span style="color:rgb(98,98,98)">=</span>[early_stopping]
-<span class="ansi-green-fg ansi-bold">     13</span> )
-<span class="ansi-green-fg ansi-bold">     15</span> <span style="font-style:italic;color:rgb(95,135,135)"># Evaluate model on test set</span>
-<span class="ansi-green-fg">---&gt; 16</span> test_loss, test_accuracy <span style="color:rgb(98,98,98)">=</span> simple_model<span style="color:rgb(98,98,98)">.</span>evaluate(test_data_resized, test_labels)
-<span class="ansi-green-fg ansi-bold">     17</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">f</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Test Loss: </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>test_loss<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span style="color:rgb(175,0,0)">"</span>)
-<span class="ansi-green-fg ansi-bold">     18</span> <span style="color:rgb(0,135,0)">print</span>(<span style="color:rgb(175,0,0)">f</span><span style="color:rgb(175,0,0)">"</span><span style="color:rgb(175,0,0)">Test Accuracy: </span><span style="font-weight:bold;color:rgb(175,95,135)">{</span>test_accuracy<span style="font-weight:bold;color:rgb(175,95,135)">}</span><span style="color:rgb(175,0,0)">"</span>)
-
-<span class="ansi-red-fg">ValueError</span>: too many values to unpack (expected 2)</pre>
-</div>
-</div>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> simple_model.fit(</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    train_data_resized,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    train_labels,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    validation_data<span class="op">=</span>(val_data_resized, val_labels), <span class="co"># Convert sparse matrix</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="dv">32</span>, <span class="co"># mini batch size</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    callbacks<span class="op">=</span>[early_stopping]</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co"># save model</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>simple_model.save(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/simple_model.keras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-21" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>simple_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/simple_model.keras"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model on test set</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>test_loss, test_accuracy, test_auc <span class="op">=</span> simple_model.evaluate(test_data_resized, test_labels)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co"># save model</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#simple_model.save(my_dir + "/scripts/drafts/models/simple_model.keras")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>simple_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/simple_model.keras"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model on test set</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>test_loss, test_accuracy, test_auc <span class="op">=</span> simple_model.evaluate(test_data_resized, test_labels)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 1s 31ms/step - AUC: 0.9219 - accuracy: 0.7918 - loss: 1.1216
 Test Loss: 1.0375816822052002
@@ -538,20 +481,20 @@ Test AUC: 0.9256560802459717</code></pre>
 <h2 class="anchored" data-anchor-id="plotting-accuracy-and-loss">Plotting accuracy and loss</h2>
 <p>We can then use our model to plot how accuracy and loss change over time in the training and validation sets</p>
 <div id="cell-25" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(history.history[<span class="st">'accuracy'</span>], label<span class="op">=</span><span class="st">'Train Accuracy'</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(history.history[<span class="st">'val_accuracy'</span>], label<span class="op">=</span><span class="st">'Validation Accuracy'</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">'Model Accuracy'</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_xlabel(<span class="st">'Epochs'</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_ylabel(<span class="st">'Accuracy'</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend()</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(history.history[<span class="st">'loss'</span>], label<span class="op">=</span><span class="st">'Train Loss'</span>)</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(history.history[<span class="st">'val_loss'</span>], label<span class="op">=</span><span class="st">'Validation Loss'</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'Model Loss'</span>)</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_xlabel(<span class="st">'Epochs'</span>)</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_ylabel(<span class="st">'Loss'</span>)</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].legend()</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">5</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(history.history[<span class="st">'accuracy'</span>], label<span class="op">=</span><span class="st">'Train Accuracy'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(history.history[<span class="st">'val_accuracy'</span>], label<span class="op">=</span><span class="st">'Validation Accuracy'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">'Model Accuracy'</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_xlabel(<span class="st">'Epochs'</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_ylabel(<span class="st">'Accuracy'</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].legend()</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(history.history[<span class="st">'loss'</span>], label<span class="op">=</span><span class="st">'Train Loss'</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(history.history[<span class="st">'val_loss'</span>], label<span class="op">=</span><span class="st">'Validation Loss'</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'Model Loss'</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_xlabel(<span class="st">'Epochs'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_ylabel(<span class="st">'Loss'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].legend()</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -578,104 +521,104 @@ Test AUC: 0.9256560802459717</code></pre>
 <li><strong>Batch Sizes</strong>: The number of samples processed before the model is updated. Larger batch sizes can reduce computation time but may lead to lower accuracy due to less diverse data (e.g., 16, 32, 64).</li>
 </ul>
 <div id="cell-28" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># building a hyperband model to find the best model architecture</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model(hp):</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''function to build a CNN model with a tuner object'''</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initialize the model</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> Sequential()</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    model.add(Conv2D(filters<span class="op">=</span>hp.Int(<span class="st">'conv_1_filter'</span>, min_value<span class="op">=</span><span class="dv">32</span>, max_value<span class="op">=</span><span class="dv">128</span>, step<span class="op">=</span><span class="dv">16</span>),</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>               kernel_size<span class="op">=</span>hp.Choice(<span class="st">'conv_1_kernel'</span>, values<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]),</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>               activation<span class="op">=</span><span class="st">'relu'</span>, input_shape<span class="op">=</span>(<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">3</span>)))</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    model.add(MaxPooling2D(<span class="dv">2</span>))</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    model.add(Conv2D(filters<span class="op">=</span>hp.Int(<span class="st">'conv_2_filter'</span>, min_value<span class="op">=</span><span class="dv">64</span>, max_value<span class="op">=</span><span class="dv">256</span>, step<span class="op">=</span><span class="dv">32</span>),</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>               kernel_size<span class="op">=</span>hp.Choice(<span class="st">'conv_2_kernel'</span>, values<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]),</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>               activation<span class="op">=</span><span class="st">'relu'</span>))</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    model.add(MaxPooling2D(<span class="dv">2</span>))</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    model.add(Conv2D(filters<span class="op">=</span>hp.Int(<span class="st">'conv_3_filter'</span>, min_value<span class="op">=</span><span class="dv">64</span>, max_value<span class="op">=</span><span class="dv">256</span>, step<span class="op">=</span><span class="dv">32</span>),</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>               kernel_size<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>               activation<span class="op">=</span><span class="st">'relu'</span>))</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    model.add(MaxPooling2D(<span class="dv">2</span>))</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    model.add(Flatten())</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span>hp.Choice(<span class="st">'dense_1_units'</span>, values<span class="op">=</span>[<span class="dv">256</span>, <span class="dv">512</span>, <span class="dv">1024</span>]),</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>              activation<span class="op">=</span><span class="st">'relu'</span>))</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(rate<span class="op">=</span>hp.Float(<span class="st">'dropout_1'</span>, min_value<span class="op">=</span><span class="fl">0.3</span>, max_value<span class="op">=</span><span class="fl">0.5</span>, step<span class="op">=</span><span class="fl">0.1</span>)))</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span>hp.Choice(<span class="st">'dense_2_units'</span>, values<span class="op">=</span>[<span class="dv">128</span>, <span class="dv">256</span>, <span class="dv">512</span>]),</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>              activation<span class="op">=</span><span class="st">'relu'</span>))</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(rate<span class="op">=</span>hp.Float(<span class="st">'dropout_2'</span>, min_value<span class="op">=</span><span class="fl">0.3</span>, max_value<span class="op">=</span><span class="fl">0.5</span>, step<span class="op">=</span><span class="fl">0.1</span>)))</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(<span class="dv">4</span>, activation<span class="op">=</span><span class="st">'softmax'</span>))</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compile the model</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>keras.optimizers.Adam(),</span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>,</span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>]</span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># building a hyperband model to find the best model architecture</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model(hp):</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''function to build a CNN model with a tuner object'''</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initialize the model</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> Sequential()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    model.add(Conv2D(filters<span class="op">=</span>hp.Int(<span class="st">'conv_1_filter'</span>, min_value<span class="op">=</span><span class="dv">32</span>, max_value<span class="op">=</span><span class="dv">128</span>, step<span class="op">=</span><span class="dv">16</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>               kernel_size<span class="op">=</span>hp.Choice(<span class="st">'conv_1_kernel'</span>, values<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>               activation<span class="op">=</span><span class="st">'relu'</span>, input_shape<span class="op">=</span>(<span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">3</span>)))</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    model.add(MaxPooling2D(<span class="dv">2</span>))</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    model.add(Conv2D(filters<span class="op">=</span>hp.Int(<span class="st">'conv_2_filter'</span>, min_value<span class="op">=</span><span class="dv">64</span>, max_value<span class="op">=</span><span class="dv">256</span>, step<span class="op">=</span><span class="dv">32</span>),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>               kernel_size<span class="op">=</span>hp.Choice(<span class="st">'conv_2_kernel'</span>, values<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>               activation<span class="op">=</span><span class="st">'relu'</span>))</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    model.add(MaxPooling2D(<span class="dv">2</span>))</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    model.add(Conv2D(filters<span class="op">=</span>hp.Int(<span class="st">'conv_3_filter'</span>, min_value<span class="op">=</span><span class="dv">64</span>, max_value<span class="op">=</span><span class="dv">256</span>, step<span class="op">=</span><span class="dv">32</span>),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>               kernel_size<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>               activation<span class="op">=</span><span class="st">'relu'</span>))</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    model.add(MaxPooling2D(<span class="dv">2</span>))</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    model.add(Flatten())</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span>hp.Choice(<span class="st">'dense_1_units'</span>, values<span class="op">=</span>[<span class="dv">256</span>, <span class="dv">512</span>, <span class="dv">1024</span>]),</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>              activation<span class="op">=</span><span class="st">'relu'</span>))</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(rate<span class="op">=</span>hp.Float(<span class="st">'dropout_1'</span>, min_value<span class="op">=</span><span class="fl">0.3</span>, max_value<span class="op">=</span><span class="fl">0.5</span>, step<span class="op">=</span><span class="fl">0.1</span>)))</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span>hp.Choice(<span class="st">'dense_2_units'</span>, values<span class="op">=</span>[<span class="dv">128</span>, <span class="dv">256</span>, <span class="dv">512</span>]),</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>              activation<span class="op">=</span><span class="st">'relu'</span>))</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(rate<span class="op">=</span>hp.Float(<span class="st">'dropout_2'</span>, min_value<span class="op">=</span><span class="fl">0.3</span>, max_value<span class="op">=</span><span class="fl">0.5</span>, step<span class="op">=</span><span class="fl">0.1</span>)))</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(<span class="dv">4</span>, activation<span class="op">=</span><span class="st">'softmax'</span>))</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># compile the model</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>keras.optimizers.Adam(),</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>,</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>]</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-29" class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hp_tuning(build_model: <span class="bu">callable</span>, train_data: np.ndarray, train_labels: np.ndarray, </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>              val_data: np.ndarray, val_labels: np.ndarray, callbacks: <span class="bu">list</span>[keras.callbacks.Callback], </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>              directory: <span class="bu">str</span>):</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Performs hyperparameter tuning on the model using the tuner object.</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">        - build_model: function to build the desired model</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">        - train_data, train_labels: training data and labels</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">        - val_data, val_labels: validation data and labels</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">        - callbacks: callbacks to use during training (pass a list of callbacks such as early stopping, </span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">        checkpointing, and learning rate reduction)</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">        - directory: directory to save the tuning trials</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">    returns:</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">        - best_hp: best hyperparameters found</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">        - best_model: best model found</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initialize tuner object</span></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    tuner <span class="op">=</span> kt.Hyperband(</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>        build_model,</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>        objective<span class="op">=</span><span class="st">'val_loss'</span>, <span class="co"># objective to optimize</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>        max_epochs<span class="op">=</span><span class="dv">30</span>, <span class="co"># how many epochs to train for once the best hyperparameters are found</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>        factor<span class="op">=</span><span class="dv">5</span>, <span class="co"># how many times to increase the number of epochs after the best hyperparameters are found</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        directory<span class="op">=</span>directory, <span class="co"># directory to save the trials to</span></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>        project_name<span class="op">=</span><span class="st">'hp_tuning'</span>,</span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start the search</span></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>    tuner.search(</span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>        train_data, train_labels,</span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>        epochs<span class="op">=</span><span class="dv">20</span>,</span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>        batch_size<span class="op">=</span><span class="dv">32</span>, </span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>        validation_data<span class="op">=</span>(val_data, val_labels),</span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>        callbacks<span class="op">=</span>callbacks,</span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get the best hyperparameters and model</span></span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>    best_hp <span class="op">=</span> tuner.get_best_hyperparameters(num_trials<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>    best_model <span class="op">=</span> tuner.hypermodel.build(best_hp)</span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_hp, best_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hp_tuning(build_model: <span class="bu">callable</span>, train_data: np.ndarray, train_labels: np.ndarray, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>              val_data: np.ndarray, val_labels: np.ndarray, callbacks: <span class="bu">list</span>[keras.callbacks.Callback], </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              directory: <span class="bu">str</span>):</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Performs hyperparameter tuning on the model using the tuner object.</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">        - build_model: function to build the desired model</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">        - train_data, train_labels: training data and labels</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">        - val_data, val_labels: validation data and labels</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">        - callbacks: callbacks to use during training (pass a list of callbacks such as early stopping, </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">        checkpointing, and learning rate reduction)</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">        - directory: directory to save the tuning trials</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">    returns:</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">        - best_hp: best hyperparameters found</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">        - best_model: best model found</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># initialize tuner object</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    tuner <span class="op">=</span> kt.Hyperband(</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>        build_model,</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>        objective<span class="op">=</span><span class="st">'val_loss'</span>, <span class="co"># objective to optimize</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>        max_epochs<span class="op">=</span><span class="dv">30</span>, <span class="co"># how many epochs to train for once the best hyperparameters are found</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>        factor<span class="op">=</span><span class="dv">5</span>, <span class="co"># how many times to increase the number of epochs after the best hyperparameters are found</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>        directory<span class="op">=</span>directory, <span class="co"># directory to save the trials to</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        project_name<span class="op">=</span><span class="st">'hp_tuning'</span>,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start the search</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    tuner.search(</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>        train_data, train_labels,</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>        epochs<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>        batch_size<span class="op">=</span><span class="dv">32</span>, </span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>        validation_data<span class="op">=</span>(val_data, val_labels),</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>        callbacks<span class="op">=</span>callbacks,</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get the best hyperparameters and model</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    best_hp <span class="op">=</span> tuner.get_best_hyperparameters(num_trials<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    best_model <span class="op">=</span> tuner.hypermodel.build(best_hp)</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_hp, best_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once we have our best model/hyperparameters, we can then build using the best architecture and load the weights that were saved from the model checkpoint callback.</p>
 <div id="cell-31" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading the best model from the modeling_file already saved:</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>best_hp_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/best_hyperband_model.keras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading the best model from the modeling_file already saved:</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>best_hp_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/best_hyperband_model.keras"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-32" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate the best model on the test set</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Hyperband_test_loss, Hyperband_test_accuracy, Hyperband_test_auc <span class="op">=</span> best_hp_model.evaluate(test_data_resized, test_labels)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>Hyperband_test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>Hyperband_test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>Hyperband_test_auc<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> best_hp_model.predict(test_data_resized)</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> np.argmax(y_pred, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert test_labels from one-hot encoding to single class format</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> np.argmax(test_labels, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(test_labels_classes, y_pred_classes))</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># save model if first time running</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Hyperband_model.save(my_dir[:-15] + "/scripts/models/Hyperband_model.keras")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate the best model on the test set</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Hyperband_test_loss, Hyperband_test_accuracy, Hyperband_test_auc <span class="op">=</span> best_hp_model.evaluate(test_data_resized, test_labels)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>Hyperband_test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>Hyperband_test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>Hyperband_test_auc<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># confusion matrix</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> best_hp_model.predict(test_data_resized)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> np.argmax(y_pred, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert test_labels from one-hot encoding to single class format</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> np.argmax(test_labels, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(confusion_matrix(test_labels_classes, y_pred_classes))</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co"># save model if first time running</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Hyperband_model.save(my_dir[:-15] + "/scripts/models/Hyperband_model.keras")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 2s 91ms/step - AUC: 0.9502 - accuracy: 0.8156 - loss: 0.5667
 Test Loss: 0.5280869603157043
@@ -730,78 +673,78 @@ Test AUC: 0.9545157551765442
 <p>One strategy used below includes freezing all layers except the last, which helps maintain the integrity of the pre-trained model while allowing us to train the last layer on our specific dataset.</p>
 <p>First, we will need to load in the pre-trained model using <code>keras.applications.ResNet50V2</code> for ResNet50. We want to make sure the input image is 224 x 224 pixels, as the ResNet50V2 model was trained on this image size, and performance will decrease</p>
 <div id="cell-35" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show layer names of the pre-trained model</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use ResNet50V2 from keras.application as pre trained model with imagenet weight</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># we dont include the top layer as we will be building our own dense layers. Top layer is the output layer.</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.applications.ResNet50V2(</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    weights<span class="op">=</span><span class="st">'imagenet'</span>, classes<span class="op">=</span><span class="dv">4</span>, input_shape<span class="op">=</span>(<span class="dv">224</span>, <span class="dv">224</span>, <span class="dv">3</span>), include_top<span class="op">=</span><span class="va">False</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># show layer names of the pre-trained model</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use ResNet50V2 from keras.application as pre trained model with imagenet weight</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># we dont include the top layer as we will be building our own dense layers. Top layer is the output layer.</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.applications.ResNet50V2(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    weights<span class="op">=</span><span class="st">'imagenet'</span>, classes<span class="op">=</span><span class="dv">4</span>, input_shape<span class="op">=</span>(<span class="dv">224</span>, <span class="dv">224</span>, <span class="dv">3</span>), include_top<span class="op">=</span><span class="va">False</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="building-a-new-model-from-transfer-learning" class="level2">
 <h2 class="anchored" data-anchor-id="building-a-new-model-from-transfer-learning">Building a new model from transfer learning</h2>
 <ul>
-<li>In this step, we instantiate the model</li>
+<li>In this step we will define a new model in a build model function which starts by taking in the argument, <code>pre_trained_model</code>. Here we can use any pre-trained model that works best. From there we will</li>
 </ul>
 <div id="cell-37" class="cell" data-execution_count="41">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model(pre_trained_model):</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Builds a model with a pre-trained model of the users choice,</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">    then builds on with dense layers to train on the particular dataset.</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> Sequential()</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    model.add(pre_trained_model)  <span class="co"># Add the pre-trained model</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    model.add(GlobalAveragePooling2D()) <span class="co"># global average pooling to reduce dimensionality</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">1024</span>, activation<span class="op">=</span><span class="st">'relu'</span>))  <span class="co"># Dense layer with 1024 nodes</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">512</span>, activation<span class="op">=</span><span class="st">'relu'</span>))  <span class="co"># Dense layer with 512 nodes</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">256</span>, activation<span class="op">=</span><span class="st">'relu'</span>)) <span class="co"># Dense layer with 256 nodes</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">128</span>, activation<span class="op">=</span><span class="st">'relu'</span>)) <span class="co"># Dense layer with 128 nodes</span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">4</span>, activation<span class="op">=</span><span class="st">'softmax'</span>))  <span class="co"># Output layer with 4 nodes</span></span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compile the model</span></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(optimizer<span class="op">=</span>Adam(),</span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>                  loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>,</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>                  metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model(pre_trained_model):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Builds a model with a pre-trained model of the users choice,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">    then builds on with dense layers to train on the particular dataset.</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">    '''</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> Sequential()</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    model.add(pre_trained_model)  <span class="co"># Add the pre-trained model</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    model.add(GlobalAveragePooling2D()) <span class="co"># global average pooling to reduce dimensionality</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">1024</span>, activation<span class="op">=</span><span class="st">'relu'</span>))  <span class="co"># Dense layer with 1024 nodes</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">512</span>, activation<span class="op">=</span><span class="st">'relu'</span>))  <span class="co"># Dense layer with 512 nodes</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">256</span>, activation<span class="op">=</span><span class="st">'relu'</span>)) <span class="co"># Dense layer with 256 nodes</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">128</span>, activation<span class="op">=</span><span class="st">'relu'</span>)) <span class="co"># Dense layer with 128 nodes</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>    model.add(Dropout(<span class="fl">0.3</span>))</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    model.add(Dense(units<span class="op">=</span><span class="dv">4</span>, activation<span class="op">=</span><span class="st">'softmax'</span>))  <span class="co"># Output layer with 4 nodes</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compile the model</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(optimizer<span class="op">=</span>Adam(),</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>                  loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                  metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-38" class="cell" data-execution_count="58">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the pre-trained ResNet50V2 model</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># training on a image size of 224x224 is most optimal for ResNet50V2</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> keras.applications.ResNet50V2(include_top<span class="op">=</span><span class="va">False</span>, input_shape<span class="op">=</span>(<span class="dv">224</span>, <span class="dv">224</span>, <span class="dv">3</span>), weights<span class="op">=</span><span class="st">'imagenet'</span>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Freeze layers of the pre-trained model</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Unfreeze the last few layers for fine-tuning</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>set_trainable <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> layer.name <span class="op">==</span> <span class="st">'conv5_block3_preact_bn'</span>:  <span class="co"># Start unfreezing from this layer onward</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>        set_trainable <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> set_trainable</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(layer, BatchNormalization):  <span class="co"># Keep BatchNormalization layers frozen</span></span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        layer.trainable <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Build and train the initial model</span></span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co">#pre_trained_model = build_model(base_model)</span></span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="co">#early_stopping = EarlyStopping(monitor='val_accuracy', patience=8, restore_best_weights=True)</span></span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="co">#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=1e-6, verbose=1)</span></span>
-<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="co">#callbacks = [early_stopping, reduce_lr]</span></span>
-<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Train frozen base model</span></span>
-<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co">#history = pre_trained_model.fit(train_data, train_labels, </span></span>
-<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="co">#                    epochs=50,</span></span>
-<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="co">#                    validation_data=(val_data, val_labels),  </span></span>
-<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="co">#                    batch_size=32,</span></span>
-<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="co">#                    callbacks=callbacks)</span></span>
-<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="co"># load model</span></span>
-<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/transfer_learned_model.keras"</span>)</span>
-<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>pre_trained_model.<span class="bu">compile</span>(optimizer<span class="op">=</span>Adam(), loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
-<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>pre_trained_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the pre-trained ResNet50V2 model</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># training on a image size of 224x224 is most optimal for ResNet50V2</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>base_model <span class="op">=</span> keras.applications.ResNet50V2(include_top<span class="op">=</span><span class="va">False</span>, input_shape<span class="op">=</span>(<span class="dv">224</span>, <span class="dv">224</span>, <span class="dv">3</span>), weights<span class="op">=</span><span class="st">'imagenet'</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Freeze layers of the pre-trained model</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Unfreeze the last few layers for fine-tuning</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>set_trainable <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> layer <span class="kw">in</span> base_model.layers:</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> layer.name <span class="op">==</span> <span class="st">'conv5_block3_preact_bn'</span>:  <span class="co"># Start unfreezing from this layer onward</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        set_trainable <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    layer.trainable <span class="op">=</span> set_trainable</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(layer, BatchNormalization):  <span class="co"># Keep BatchNormalization layers frozen</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        layer.trainable <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Build and train the initial model</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#pre_trained_model = build_model(base_model)</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#early_stopping = EarlyStopping(monitor='val_accuracy', patience=8, restore_best_weights=True)</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=3, min_lr=1e-6, verbose=1)</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#callbacks = [early_stopping, reduce_lr]</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Train frozen base model</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#history = pre_trained_model.fit(train_data, train_labels, </span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#                    epochs=50,</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#                    validation_data=(val_data, val_labels),  </span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a><span class="co">#                    batch_size=32,</span></span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a><span class="co">#                    callbacks=callbacks)</span></span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a><span class="co"># load model</span></span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>pre_trained_model <span class="op">=</span> keras.models.load_model(my_dir <span class="op">+</span> <span class="st">"/scripts/drafts/models/transfer_learned_model.keras"</span>)</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>pre_trained_model.<span class="bu">compile</span>(optimizer<span class="op">=</span>Adam(), loss<span class="op">=</span><span class="st">'categorical_crossentropy'</span>, metrics<span class="op">=</span>[<span class="st">'accuracy'</span>, <span class="st">'AUC'</span>])</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>pre_trained_model.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "sequential"</span>
 </pre>
@@ -850,11 +793,11 @@ Test AUC: 0.9545157551765442
 <section id="overall-performance" class="level3">
 <h3 class="anchored" data-anchor-id="overall-performance">Overall Performance</h3>
 <div id="cell-40" class="cell" data-execution_count="56">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate on test set</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_accuracy, test_auc <span class="op">=</span> pre_trained_model.evaluate(test_data, test_labels)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluate on test set</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_accuracy, test_auc <span class="op">=</span> pre_trained_model.evaluate(test_data, test_labels)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Loss: </span><span class="sc">{</span>test_loss<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test Accuracy: </span><span class="sc">{</span>test_accuracy<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test AUC: </span><span class="sc">{</span>test_auc<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 15s 691ms/step - AUC: 0.9818 - accuracy: 0.9270 - loss: 0.4676
 Test Loss: 0.5465376377105713
@@ -866,11 +809,11 @@ Test AUC: 0.9747616648674011</code></pre>
 <section id="performance-for-each-class" class="level3">
 <h3 class="anchored" data-anchor-id="performance-for-each-class">Performance for Each Class</h3>
 <div id="cell-42" class="cell" data-execution_count="57">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> pre_trained_model.predict(test_data)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> ohe.inverse_transform(test_labels)</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> ohe.inverse_transform(y_pred)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(test_labels_classes, y_pred_classes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> pre_trained_model.predict(test_data)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>test_labels_classes <span class="op">=</span> ohe.inverse_transform(test_labels)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>y_pred_classes <span class="op">=</span> ohe.inverse_transform(y_pred)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(test_labels_classes, y_pred_classes))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20/20 ━━━━━━━━━━━━━━━━━━━━ 15s 724ms/step
               precision    recall  f1-score   support
@@ -887,6 +830,15 @@ weighted avg       0.93      0.93      0.93       620
 </div>
 </div>
 </section>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+</section>
+<section id="considerations" class="level2">
+<h2 class="anchored" data-anchor-id="considerations">Considerations</h2>
 </section>
 </section>
 
