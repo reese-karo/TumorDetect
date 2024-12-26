@@ -12,12 +12,11 @@ import cv2
 import streamlit as st
 from tensorflow.keras.models import load_model
 from transformers import pipeline
-import openai
+from openai import OpenAI
 # set the working directory
 os.chdir("/Users/reese/Documents/Projects/BioStats/TumorDetect")
 
 ### functions for the app ###
-
 label_names = ['glioma', 'meningioma', 'normal', 'pituitary'] # set of the tumor types for the model
 image_model = load_model('scripts/transfer_learned_model.keras') # load in the cnn trained model
 
@@ -38,22 +37,20 @@ def generate_summary(tumor_type, api_key):
     Generates a summary of the tumor type using OpenAI's GPT model.
     '''
     try:
-        openai.api_key = api_key,
-        response = openai.ChatCompletion.create(
-            model="gpt-4o",
-            prompt=f"Provide a clear and concise summary of the {tumor_type} tumor. Include its causes, symptoms, and treatment options.",
-            max_tokens=200,
-            temperature=0.5,
-            top_p=0.9,
-            frequency_penalty=0,
-            presence_penalty=0
+        client = OpenAI(api_key=api_key)
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that will provide a summary of the tumor type."},
+                {"role": "user", "content": f"Provide a clear and concise summary of the tumor {tumor_type}. Include a description of the tumor and some facts about it that are relevant."}
+            ]
         )
         # Clean up and return the response
-        return response.choices[0].text.strip()
-    except openai.error.OpenAIError as e:
-        return f"An error occurred: {e}"
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"An error occurred with the OpenAI API: {e}"
     
-def predict_image(image, api_key):
+def predict_image(image):
     '''
     This function predicts the tumor type of the image using the cnn trained model.
     '''
@@ -62,30 +59,50 @@ def predict_image(image, api_key):
     predicted_class = np.argmax(prediction)
     confidence = prediction[0][predicted_class]  # Extract confidence score
     predicted_label = label_names[predicted_class]
-    summary = generate_summary(predicted_label, api_key)
-    return f"{predicted_label} (CONFIDENCE: {confidence:.2f}%)\n SUMMARY:\n{summary}"
+    return f"{predicted_label} (CONFIDENCE: {confidence:.2f}%)"
+
+
 
 ### main app ###
 st.set_page_config(layout="wide", page_title="Tumor Detection")
 st.title("Tumor Detection")
-st.write("Use this app to detect tumors from your MRI scans, and to receive a summary of the tumor.")
+st.write("This app will aid in detecting tumors from your MRI scans, and to receive a summary of the tumor.")
 st.write("Upload an MRI scan to get started.")
-uploaded_file = st.sidebar.file_uploader("Choose an MRI Scan to upload...", type=["jpg", "jpeg"])
-api_key = st.sidebar.text_input("Enter your OPENAI API key:", type="password")
-if uploaded_file is not None:
+
+# example images
+example_images_labels = ["Glioma", "Meningioma", "Normal", "Pituitary"]
+st.header("Example Images")
+example_images = [f"/Users/reese/Documents/Projects/BioStats/TumorDetect/data/examples/{example_image_selection}_example.jpg" for example_image_selection in example_images_labels]
+example_image = st.image(example_images, width=200, caption=example_images_labels)
+
+# side bar for the app
+with st.sidebar:
+    api_key = st.text_input("OPENAI API Key:", type="password", placeholder="Enter your API key here...")
+    uploaded_file = st.file_uploader("Choose an MRI Scan to upload...", type=["jpg", "jpeg"])
+    example_image_selection = st.selectbox("Or select an example image:", example_images_labels)
+
+# main body of the app
+if api_key and uploaded_file is not None:
     try:
         image=cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), cv2.IMREAD_COLOR)
         if image is None:
             raise ValueError("Invalid image. Please upload a valid image file.")
-        st.image(image, caption="Uploaded MRI Scan", use_column_width=False)
-
+        st.image(image, caption="Uploaded MRI Scan", use_column_width=True)
         with st.spinner("Analyzing MRI scan and generating prediction..."):
             result = predict_image(image)
+            summary = generate_summary(result, api_key)
         st.write(result)
+        st.write(summary)
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.error(f"An error occurred with the uploaded image: {e}")
+elif api_key and example_image_selection:
+    with st.spinner("Analyzing MRI scan and generating prediction..."):
+        result = predict_image(example_images[example_images_labels.index(example_image_selection)])
+        summary = generate_summary(result, api_key)
+    st.write(result)
+    st.write(summary)
 else:
-    st.write("Please upload an MRI scan to get started.")
+    st.write("Please upload an MRI scan or select an example image with YOUR API key to get started.")
 
         
 with st.expander("About"):
